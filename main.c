@@ -57,8 +57,8 @@ int main(void)
 	return 0;
 }
 
-//Function fo problems that consist only of addition and subtraction
-//i.e.: 123 + 323 - 45
+//Function that generates problems consisting only of addition and subtraction
+//e.g.: 123 + 323 - 45
 void addAndSub(int difficulty)
 {
 	int* nums;  //Vector of the numbers used in the problem
@@ -135,7 +135,7 @@ void addAndSub(int difficulty)
 	free(nums);
 }
 
-//This function generates a problem of which the opperations are only multiplication and division,
+//Function that generates a problem of which the opperations are multiplication and division,
 //e.g.: 836 * 921/10 
 void multAndDiv(int difficulty)
 {
@@ -178,13 +178,13 @@ void multAndDiv(int difficulty)
 	for(i=0; i<length-1; i++)
 		opperations[i] = '*'; // the default opperation is multiplication
 	
-	if(length > 2) // If there is room for it, randomply places subtracitons or divisions, but not in place of the first opperation
+	if(length > 2) // If there is room for it, randomply places divisions, but not in place of the first opperation
 	{
-		opperations [rand()%(length-2) + 1] = '-';
 		opperations [rand()%(length-2) + 1] = '/';
 	}
 }
 
+//Function that swaps the content of two integers
 void swap(int *a, int *b)
 {
 	int aux = *a;
