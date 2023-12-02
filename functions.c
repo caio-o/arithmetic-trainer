@@ -66,6 +66,13 @@ void addAndSub(int difficulty)
 
 	printf("\nANSWER: ");
 	scanf("%d", &input);
+	
+	while(input != res)
+	{
+		printf("\nWRONG\nANSWER: ");
+		scanf("%d", &input);
+	}
+	printf("\nCORRECT!\n");
 }
 
 
