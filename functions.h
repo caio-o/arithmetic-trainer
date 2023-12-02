@@ -1,5 +1,5 @@
 
 
-void addAndSub(difficulty);
-void multAndDiv(difficulty);
+void addAndSub(int difficulty);
+void multAndDiv(int difficulty);
 void swap(int *a, int *b);
