@@ -12,13 +12,14 @@
 // Macro to be used in the function randomDenominator
 #define N_DIVISORS 7
 
+//For ignoring possible floating point precision errors when evaluating the user's answer
+#define MAX_ERROR 0.00003
+
 // A function that returns a random divisor within a list.
 // The possible divisors are controlled in order to avoid periodical numbers, e.g. 4/3 = 1,333... 
 int randomDenominator()
 {
-	int nums[N_DIVISORS];
-
-	nums = {2, 4, 5, 10, 20, 100, 200}; // List of possible divisors
+	int nums[] = {2, 4, 5, 10, 20, 100, 200}; // List of possible divisors
 
 	return nums[rand()%N_DIVISORS];
 }
@@ -27,7 +28,7 @@ int randomDenominator()
 //e.g.: 123 + 323 - 45
 void addAndSub(int difficulty)
 {
-	int* nums;  //Vector of the numbers used in the problem
+	int *nums;  //Vector of the numbers used in the problem
 	int length;  //Amount of numbers in the problem
 	int maxValue, minValue;  //Greatest and smallest numbers possible
 	int input, res = 0;
@@ -104,10 +105,11 @@ void addAndSub(int difficulty)
 void multAndDiv(int difficulty)
 {
 	int minValue=1, maxValue=1;
-	int exponent, length, i;
+	int length, i, j;
 	int *nums;
 	char *opperations;
 
+	float input;
 	float res = 1.0;
 
 	switch(difficulty)
@@ -141,8 +143,6 @@ void multAndDiv(int difficulty)
 	// length-1 here because there are only opperations BETWEEN 2 numbers: 
 	// a * b/c --> 3 numbers, 2 opperations
 	opperations = (char*)malloc(sizeof(char)*(length-1));
-	
-	for(i=0; i<length; i++)
 
 	for(i=0; i<length-1; i++)
 		opperations[i] = '*'; // the default opperation is multiplication
@@ -153,17 +153,47 @@ void multAndDiv(int difficulty)
 	
 	nums[0] = rand()%(maxValue - minValue) + minValue;
 
-	for(i; i<length; i++)
+	// Fill in the vector with the numbers and print the problem as it is generated
+	for(i=0; i<length-1; i++)
 	{
 		if(opperations[i-1] == '/')
+		{
 			nums[i] = randomDenominator();
-		
+			printf("%d/", nums[i]);
+		}
 		else 
+		{
 			nums[i] = rand()%(maxValue - minValue) + minValue; 
+			printf("%d * ", nums[i]);
+		}
 	}
+
+	// Calculate result
+	for(i=0; i<length-1; i++)
+	{
+		if(opperations[i] == '/')
+		{
+			nums[i] = nums[i]/nums[i+1];
+
+			for(j=i+1; j<length-1; j++)
+				nums[j] = nums[j+1];
+		}
+	}
+
+	for(i=0; i<length; i++)
+		res *= nums[i];
+
+	if(opperations[length-2] == '*')
+		res *= nums[length-1];
 
 	free(nums);
 	free(opperations);
+
+	scanf("%f", &input);
+	while(input > res+MAX_ERROR || input < res-MAX_ERROR)
+		printf("\tWRONG!\n\n\tANSWER: ");
+
+	printf("\tCORRECT!\n\n");
 }
 
 //Function that swaps the content of two integers 
