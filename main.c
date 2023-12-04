@@ -44,10 +44,33 @@ int main(void)
 
 	//TODO: (1) Calculate total time taken and also (2) the average time taken to solve each problem
 
-	for(i=0; i<problemAmount; i++)
+	switch(mode)
 	{
-		printf("PROBLEM %d: ", i+1);
-		addAndSub(difficulty);
+	case 1:
+		for(i=0; i<problemAmount; i++)
+		{
+			printf("PROBLEM %d: ", i+1);
+			addAndSub(difficulty);
+		}
+		break;
+
+	case 2:
+		for(i=0; i<problemAmount; i++)
+		{
+			printf("PROBLEM %d: ", i+1);
+			multAndDiv(difficulty);
+		}
+		break;
+
+	default:
+		for(i=0; i<problemAmount; i++)
+		{
+			printf("PROBLEM: %d ", i+1);
+			if(rand()%2)
+				addAndSub(difficulty);
+			else
+				multAndDiv(difficulty);
+		}
 	}
 
 	return 0;
