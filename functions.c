@@ -1,5 +1,27 @@
+/**********************************************************************/
+/*                                                                    */
+/* Definitions of all the functions of the program, which are         */
+/* all declared in functions.h, and whose purpose is to generate      */
+/* the expressions to be evaluated by the user.                       */
+/*                                                                    */
+/**********************************************************************/
+
 #include <stdio.h> 
 #include <stdlib.h>
+
+// Macro to be used in the function randomDenominator
+#define N_DIVISORS 7
+
+// A function that returns a random divisor within a list.
+// The possible divisors are controlled in order to avoid periodical numbers, e.g. 4/3 = 1,333... 
+int randomDenominator()
+{
+	int nums[N_DIVISORS];
+
+	nums = {2, 4, 5, 10, 20, 100, 200}; // List of possible divisors
+
+	return nums[rand()%N_DIVISORS];
+}
 
 //Function that generates problems consisting only of addition and subtraction
 //e.g.: 123 + 323 - 45
@@ -73,17 +95,20 @@ void addAndSub(int difficulty)
 		scanf("%d", &input);
 	}
 	printf("\nCORRECT!\n");
-}
 
+	free(nums);
+}
 
 //Function that generates a problem of which the opperations are multiplication and division,
 //e.g.: 836 * 921/10 
 void multAndDiv(int difficulty)
 {
-	long resInt, minValue=1, maxValue=1;
+	int minValue=1, maxValue=1;
 	int exponent, length, i;
 	int *nums;
 	char *opperations;
+
+	float res = 1.0;
 
 	switch(difficulty)
 	{
@@ -103,29 +128,45 @@ void multAndDiv(int difficulty)
 		length = 4;
 		minValue = 100;
 		maxValue = 100000;
-		break;
-
-	default:
-		length = 2;
-		minValue = 1000;
+		break; 
+	default: 
+		length = 2; 
+		minValue = 1000; 
 		maxValue = 100000;
 		break;
 	}
 
-	// length-1 here because there are only opperations between numbers: 
-	// a * b + c --> 3 numbers, 2 opperations
+	nums = (int*)malloc(sizeof(int)*(length));
+
+	// length-1 here because there are only opperations BETWEEN 2 numbers: 
+	// a * b/c --> 3 numbers, 2 opperations
 	opperations = (char*)malloc(sizeof(char)*(length-1));
 	
+	for(i=0; i<length; i++)
+
 	for(i=0; i<length-1; i++)
 		opperations[i] = '*'; // the default opperation is multiplication
+
+	// Randomly places a division
+	if(rand()%(length+10) <5)
+	opperations [rand()%(length-2)] = '/';
 	
-	if(length > 2) // If there is room for it, randomply places divisions, but not in place of the first opperation
+	nums[0] = rand()%(maxValue - minValue) + minValue;
+
+	for(i; i<length; i++)
 	{
-		opperations [rand()%(length-2) + 1] = '/';
+		if(opperations[i-1] == '/')
+			nums[i] = randomDenominator();
+		
+		else 
+			nums[i] = rand()%(maxValue - minValue) + minValue; 
 	}
+
+	free(nums);
+	free(opperations);
 }
 
-//Function that swaps the content of two integers
+//Function that swaps the content of two integers 
 void swap(int *a, int *b)
 {
 	int aux = *a;
