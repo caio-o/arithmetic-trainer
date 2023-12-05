@@ -106,7 +106,7 @@ void multAndDiv(int difficulty)
 {
 	int minValue=1, maxValue=1;
 	int length, i, j;
-	int *nums;
+	float *nums;
 	char *opperations;
 
 	float input;
@@ -138,7 +138,7 @@ void multAndDiv(int difficulty)
 		break;
 	}
 
-	nums = (int*)malloc(sizeof(int)*(length));
+	nums = (float*)malloc(sizeof(float)*(length));
 
 	// length-1 here because there are only opperations BETWEEN 2 numbers: 
 	// a * b/c --> 3 numbers, 2 opperations
@@ -148,23 +148,24 @@ void multAndDiv(int difficulty)
 		opperations[i] = '*'; // the default opperation is multiplication
 
 	// Randomly places a division
-	if(rand()%(length+10) <5)
-	opperations [rand()%(length-2)] = '/';
+	if(rand()%(length+10) > 5)
+		opperations [rand()%(length-1)] = '/';
 	
 	nums[0] = rand()%(maxValue - minValue) + minValue;
+	printf("%.0f", nums[0]);
 
-	// Fill in the vector with the numbers and print the problem as it is generated
-	for(i=0; i<length-1; i++)
+	//Fill in the vector with the numbers and print the problem as it is generated
+	for(i=1; i<length; i++)
 	{
 		if(opperations[i-1] == '/')
 		{
 			nums[i] = randomDenominator();
-			printf("%d/", nums[i]);
+			printf("/%.0f", nums[i]);
 		}
 		else 
 		{
 			nums[i] = rand()%(maxValue - minValue) + minValue; 
-			printf("%d * ", nums[i]);
+			printf(" * %.0f", nums[i]);
 		}
 	}
 
@@ -177,29 +178,24 @@ void multAndDiv(int difficulty)
 
 			for(j=i+1; j<length-1; j++)
 				nums[j] = nums[j+1];
+
+			length--;
 		}
 	}
 
 	for(i=0; i<length; i++)
 		res *= nums[i];
 
-	if(opperations[length-2] == '*')
-		res *= nums[length-1];
-
 	free(nums);
 	free(opperations);
 
+	printf("\n\tANSWER:");
 	scanf("%f", &input);
 	while(input > res+MAX_ERROR || input < res-MAX_ERROR)
+	{
 		printf("\tWRONG!\n\n\tANSWER: ");
+		scanf("%f", &input);
+	}
 
 	printf("\tCORRECT!\n\n");
-}
-
-//Function that swaps the content of two integers 
-void swap(int *a, int *b)
-{
-	int aux = *a;
-	*a = *b;
-	*b = aux;
 }
