@@ -87,15 +87,15 @@ void addAndSub(int difficulty)
 		res += nums[i]; //  The result is the sum of all the numbers
 	}
 
-	printf("\nANSWER: ");
+	printf("\n\tANSWER: ");
 	scanf("%d", &input);
 	
 	while(input != res)
 	{
-		printf("\nWRONG\nANSWER: ");
+		printf("\tXXXX WRONG! XXXX\n\tANSWER: ");
 		scanf("%d", &input);
 	}
-	printf("\nCORRECT!\n");
+	printf("\n\t!!!! CORRECT !!!!!\n\n");
 
 	free(nums);
 }
@@ -189,13 +189,13 @@ void multAndDiv(int difficulty)
 	free(nums);
 	free(opperations);
 
-	printf("\n\tANSWER:");
+	printf("\n\tANSWER: ");
 	scanf("%f", &input);
 	while(input > res+MAX_ERROR || input < res-MAX_ERROR)
 	{
-		printf("\tWRONG!\n\n\tANSWER: ");
+		printf("\tXXXX WRONG! XXXX\n\tANSWER: ");
 		scanf("%f", &input);
 	}
 
-	printf("\tCORRECT!\n\n");
+	printf("\n\t!!!! CORRECT !!!!\n\n");
 }
