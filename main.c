@@ -71,7 +71,7 @@ int main(void)
 		{
 			// Randomly calls either addAndSub or multAndDiv.
 			printf("\n\t(%d) ", i+1);
-			if(rand()%2) // if the number generated is odd...
+			if(rand()%2)
 				addAndSub(difficulty);
 			else
 				multAndDiv(difficulty);

@@ -9,19 +9,17 @@
 #include <stdio.h> 
 #include <stdlib.h>
 
-// Macro to be used in the function randomDenominator
-#define N_DIVISORS 7
-
 //For ignoring possible floating point precision errors when evaluating the user's answer
-#define MAX_ERROR 0.00003
+#define MAX_ERROR 0.000003
 
 // A function that returns a random divisor within a list.
-// The possible divisors are controlled in order to avoid periodical numbers, e.g. 4/3 = 1,333... 
+// The possible denominators are controlled in order to avoid periodical numbers, e.g. 4/3 = 1.333... 
 int randomDenominator()
 {
-	int nums[] = {2, 4, 5, 10, 20, 100, 200}; // List of possible divisors
+	int numsSize = 8; // Make shure this corresponds to the actual size of the vector
+	int nums[] = {2, 4, 5, 8, 10, 20, 100, 200}; // List of possible divisors
 
-	return nums[rand()%N_DIVISORS];
+	return nums[rand() % numsSize];
 }
 
 //Function that generates problems consisting only of addition and subtraction
@@ -36,10 +34,10 @@ void addAndSub(int difficulty)
 
 	if(difficulty == 4)
 	{
-		// Difficulty 4: 2 very large numbers
+		// Difficulty 4: two very large numbers
 		length = 2;
-		minValue = 100000;
-		maxValue = RAND_MAX/2; //4: 2*2*2*2*2*2
+		minValue = 100000; 
+		maxValue = RAND_MAX/2; //Typically 2*2*2*2*2*2
 	}
 	else
 	{
@@ -65,13 +63,14 @@ void addAndSub(int difficulty)
 
 	nums = (int*)malloc(length*sizeof(int));
 
-	//The first number is set here so that it is allways positive (cf. the loop below)
+	//The first number is set here so that it is allways positive (cf. the loop below).
 	nums[0] = rand()%(maxValue-minValue+1) + minValue;
-	printf("%d ", nums[0]);
+	printf("%d ", nums[0]); //The problem numbers are printed as they are generated.
 
+	//The result is also calculated as the numbers are generated.
 	res = nums[0];
 
-	for(i=1; i<length; i++)
+	for(i=1; i<length; i++) //i=1 because the first number was dealt with already.
 	{
 		
 		nums[i] = rand()%(maxValue-minValue+1) + minValue;
@@ -84,13 +83,13 @@ void addAndSub(int difficulty)
 		else
 			printf("+ %d ", nums[i]);
 
-		res += nums[i]; //  The result is the sum of all the numbers
+		res += nums[i]; //The result is the sum of all the numbers.
 	}
 
 	printf("\n\tANSWER: ");
 	scanf("%d", &input);
 	
-	while(input != res)
+	while(input != res) //As long as the user's answer is wrong, repeat interaction.
 	{
 		printf("\tXXXX WRONG! XXXX\n\tANSWER: ");
 		scanf("%d", &input);
@@ -105,13 +104,15 @@ void addAndSub(int difficulty)
 void multAndDiv(int difficulty)
 {
 	int minValue=1, maxValue=1;
-	int length, i, j;
-	float *nums;
-	char *opperations;
+	int length, i, j; // Length is the amount of numbers. i and j are loop control variables
+	float *nums; // The integers are stored as floats because of the presence of division (e.g. 21/2 = 10.5)
+	char *opperations; // Stores the opperations to be realized on the numbers stored. 
+			   // OBS.: Opperation[i] typically occurs between nums[i] and nums[i+1].
 
-	float input;
-	float res = 1.0;
+	float input; // The user's answer
+	float res = 1.0; // The result to be computed.
 
+	// The characteristics of the problems are set according to the difficulty chosen
 	switch(difficulty)
 	{
 	case 1:
@@ -147,10 +148,10 @@ void multAndDiv(int difficulty)
 	for(i=0; i<length-1; i++)
 		opperations[i] = '*'; // the default opperation is multiplication
 
-	// Randomly places a division
-	if(rand()%(length+10) > 5)
+	if(rand()%2) // Randomly puts a division into the problem, with a chance of 1/2 (50%).
 		opperations [rand()%(length-1)] = '/';
 	
+	// First number generated here to avoid segmentation fault (cf. loop below)
 	nums[0] = rand()%(maxValue - minValue) + minValue;
 	printf("%.0f", nums[0]);
 
@@ -159,17 +160,17 @@ void multAndDiv(int difficulty)
 	{
 		if(opperations[i-1] == '/')
 		{
-			nums[i] = randomDenominator();
+			nums[i] = randomDenominator(); //cf. function definition
 			printf("/%.0f", nums[i]);
 		}
 		else 
 		{
-			nums[i] = rand()%(maxValue - minValue) + minValue; 
+			nums[i] = rand()%(maxValue - minValue) + minValue;
 			printf(" * %.0f", nums[i]);
 		}
 	}
 
-	// Calculate result
+	// Compute divisions first, and update the vector to contain the results of the divisions
 	for(i=0; i<length-1; i++)
 	{
 		if(opperations[i] == '/')
@@ -177,13 +178,13 @@ void multAndDiv(int difficulty)
 			nums[i] = nums[i]/nums[i+1];
 
 			for(j=i+1; j<length-1; j++)
-				nums[j] = nums[j+1];
+				nums[j] = nums[j+1]; // Shifts vector left, because there is now one less element ("a/b" becomes just "c")
 
-			length--;
+			length--; // Lessens the length because of the shifting
 		}
 	}
 
-	for(i=0; i<length; i++)
+	for(i=0; i<length; i++) // Compute the result by multiplying each element
 		res *= nums[i];
 
 	free(nums);
@@ -191,7 +192,9 @@ void multAndDiv(int difficulty)
 
 	printf("\n\tANSWER: ");
 	scanf("%f", &input);
-	while(input > res+MAX_ERROR || input < res-MAX_ERROR)
+
+	// This condition is used (instead of input == res) to avoid a potential floating point precision error
+	while(input > res+MAX_ERROR || input < res-MAX_ERROR) 
 	{
 		printf("\tXXXX WRONG! XXXX\n\tANSWER: ");
 		scanf("%f", &input);
