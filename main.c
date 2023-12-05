@@ -17,9 +17,11 @@
 
 int main(void)
 {
-	int i;
-	int mode, difficulty, problemAmount;
-	int hasMissed = 0;
+	int i; // Loop control variable
+	// mode controls the types of problems.
+	// difficulty controls their complexity, i.e. their size and the greatness of their numbers.
+	// problemAmount controls the amount of problems to be solved before the program terminates itself.
+	int mode, difficulty, problemAmount; 
 
 	printf("\nWhat would you like to train?");
 	printf("\n\t[1] Addition and subtraction");
@@ -42,14 +44,16 @@ int main(void)
 
 	srand(time(NULL));
 
-	//TODO: (1) Calculate total time taken and also (2) the average time taken to solve each problem
+	//TODO: (1) Calculate total time taken and also (2) the average time taken to solve each problem.
+	//TODO: Implement the "sudden death" variant, for when problemAmount == 0.
 
+	// Switch statement that calls the correct function according to chosen mode.
 	switch(mode)
 	{
 	case 1:
 		for(i=0; i<problemAmount; i++)
 		{
-			printf("PROBLEM %d: ", i+1);
+			printf("\n\t(%d): ", i+1);
 			addAndSub(difficulty);
 		}
 		break;
@@ -57,7 +61,7 @@ int main(void)
 	case 2:
 		for(i=0; i<problemAmount; i++)
 		{
-			printf("PROBLEM %d: ", i+1);
+			printf("\n\t(%d) ", i+1);
 			multAndDiv(difficulty);
 		}
 		break;
@@ -65,8 +69,9 @@ int main(void)
 	default:
 		for(i=0; i<problemAmount; i++)
 		{
-			printf("PROBLEM: %d ", i+1);
-			if(rand()%2)
+			// Randomly calls either addAndSub or multAndDiv.
+			printf("\n\t(%d) ", i+1);
+			if(rand()%2) // if the number generated is odd...
 				addAndSub(difficulty);
 			else
 				multAndDiv(difficulty);
