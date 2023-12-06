@@ -6,6 +6,6 @@
 /*                                                                    */
 /**********************************************************************/
 
-void addAndSub(int difficulty);
-void multAndDiv(int difficulty);
+void addAndSub(int difficulty, int *hasMissed, int suddenDeathActive);
+void multAndDiv(int difficulty, int *hasMissed, int suddenDeathActive);
 int randomDenominator(void);

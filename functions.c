@@ -24,7 +24,7 @@ int randomDenominator()
 
 //Function that generates problems consisting only of addition and subtraction
 //e.g.: 123 + 323 - 45
-void addAndSub(int difficulty)
+void addAndSub(int difficulty, int *hasMissed, int suddenDeathActive)
 {
 	int *nums;  //Vector of the numbers used in the problem
 	int length;  //Amount of numbers in the problem
@@ -88,20 +88,32 @@ void addAndSub(int difficulty)
 
 	printf("\n\tANSWER: ");
 	scanf("%d", &input);
-	
-	while(input != res) //As long as the user's answer is wrong, repeat interaction.
+
+	if(!suddenDeathActive)
 	{
-		printf("\tXXXX WRONG! XXXX\n\tANSWER: ");
-		scanf("%d", &input);
+		while(input != res) //As long as the user's answer is wrong, repeat interaction.
+		{
+			printf("\tXXXX WRONG! XXXX\n\tANSWER: ");
+			scanf("%d", &input);
+		}
+		printf("\n\t!!!! CORRECT !!!!!\n\n");
 	}
-	printf("\n\t!!!! CORRECT !!!!!\n\n");
+	else if(input != res)
+	{
+		printf("\tXXXX WRONG! XXXX\n\n");
+		*hasMissed = 1;
+	}
+	else
+	{
+		printf("\n\t!!!! CORRECT !!!!\n\n");
+	}
 
 	free(nums);
 }
 
 //Function that generates a problem of which the opperations are multiplication and division,
 //e.g.: 836 * 921/10 
-void multAndDiv(int difficulty)
+void multAndDiv(int difficulty, int *hasMissed, int suddenDeathActive)
 {
 	int minValue=1, maxValue=1;
 	int length, i, j; // Length is the amount of numbers. i and j are loop control variables
@@ -193,12 +205,25 @@ void multAndDiv(int difficulty)
 	printf("\n\tANSWER: ");
 	scanf("%f", &input);
 
-	// This condition is used (instead of input == res) to avoid a potential floating point precision error
-	while(input > res+MAX_ERROR || input < res-MAX_ERROR) 
+	if(!suddenDeathActive)
 	{
-		printf("\tXXXX WRONG! XXXX\n\tANSWER: ");
-		scanf("%f", &input);
+		// This condition is used (instead of input == res) to avoid a potential floating point precision error
+		while(input > res+MAX_ERROR || input < res-MAX_ERROR) 
+		{
+			printf("\tXXXX WRONG! XXXX\n\tANSWER: ");
+			scanf("%f", &input);
+		}
+	
+		printf("\n\t!!!! CORRECT !!!!\n\n");
 	}
-
-	printf("\n\t!!!! CORRECT !!!!\n\n");
+	else if(input > res+MAX_ERROR || input < res-MAX_ERROR)
+	{
+		printf("\tXXXX WRONG! XXXX\n\n");
+		*hasMissed = 1;
+	}
+	else
+	{
+		printf("\t\n!!!! CORRECT !!!!\n\n");
+	}
 }
+
